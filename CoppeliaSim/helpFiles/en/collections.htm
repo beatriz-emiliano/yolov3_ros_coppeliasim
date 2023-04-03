@@ -1,0 +1,98 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Strict//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<title>Collections</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+</head>
+
+<body>
+
+<div align="center">
+<table class=allEncompassingTable >
+ <tr>
+  <td >
+<p><a href="../index.html" TARGET="_top"><img src="images/homeImg.png"></a></p>
+
+
+
+<h1>Collections</h1>
+
+<p>A collection is a user-defined collection of <a href="objects.htm">scene objects</a>. Both collections and scene objects are <a href="entities.htm">entities</a>. Collections are useful when referring to several objects like a robot for instance, when performing a specific operation, such as <a href="collisionDetection.htm">checking for collision</a> between two robots: if a collision detection pair was defined as (collectionRobot1; collectionRobot2), then the collision checking algorithm would check whether any object from the first collection interferes with any object from the second collection.<br>
+</p>
+
+<p>Collections are <a href="collidableObjects.htm">collidable</a>, <a href="measurableObjects.htm">measurable</a> and <a href="detectableObjects.htm">detectable</a> entities. This means that collections:</p>
+
+<li>can be used in <a href="collisionDetection.htm">collision detections</a> against other collidable entities.<br>
+</li>
+
+<li>can be used in <a href="distanceCalculation.htm">minimum distance calculations</a> with other measurable entities.<br>
+</li>
+
+<li>can be detected by <a href="proximitySensors.htm">proximity sensors</a>. </li>
+
+<p>Even if a collection is collidable, measurable and detectable, this doesn't mean that all objects contained in the collection are collidable, measurable and detectable:</p>
+
+
+<li>During collision detection, only the collidable objects of a collection (subset of the collection) are tested against another collidable entity.</li>
+
+<li>During distance measurement, only the measurable objects of a collection (subset of the collection) are measured against another measurable entity.</li>
+
+<li>Only the detectable objects of a collection (subset of the collection) can be detected by proximity sensors.</li>
+
+
+<p>A collection can however override the collidable, measurable and detectable properties of its objects.<br>
+</p>
+
+<p>A collection is defined by one or several items that can be combined in an additive or subtractive manner. Following items are supported:</p>
+
+<li>a single object</li>
+<li>a tree of objects: this item represents all descendants of a single object (located at the tree root). If the tree grows or shrinks, the item will dynamically grow/shrink too.</li>
+<li>a chain of objects: this represents all objects encountered when following all ancestors of a single object, If the chain grows or shrinks, the item will dynamically grow/shrink too.</li>
+<li>all scene objects</li>
+<p>A collection is not static, and is constantly evaluated/updated to determine its containing objects. A given collection can also be defined in many different ways, depending on specific needs:</p>
+
+<p align=center><img src="images/collections.jpg"></p>
+<p class=imageLabel>[Example collection containing 4 objects (the colored objects]</p>
+<br>
+
+<p>Above collection could be defined as a combination of 4 items, resulting in following code:</p>
+
+<code class="hljs language-lua coppelia-coppeliasim-script">
+-- Collection defined as: &lt;object2&gt; + &lt;object4&gt; + &lt;object6&gt; + &lt;object7&gt;
+
+local object2=sim.getObject('/object2')
+local object4=sim.getObject('/object4')
+local object6=sim.getObject('/object6')
+local object7=sim.getObject('/object7')
+collectionHandle=sim.createCollection(0)
+sim.addItemToCollection(collectionHandle,sim.handle_single,object2,0)
+sim.addItemToCollection(collectionHandle,sim.handle_single,object4,0)
+sim.addItemToCollection(collectionHandle,sim.handle_single,object6,0)
+sim.addItemToCollection(collectionHandle,sim.handle_single,object7,0)</code>
+
+<p>But a similar collection could also be defined as a combination of following 3 items too:</p>
+
+<code class="hljs language-lua coppelia-coppeliasim-script">
+-- Collection defined as: &lt;all objects&gt; - &lt;tree starting at object1&gt; + &lt;object6&gt;
+
+local object1=sim.getObject('/object1')
+local object6=sim.getObject('/object6')
+collectionHandle=sim.createCollection(0)
+sim.addItemToCollection(collectionHandle,sim.handle_all,-1,0)
+sim.addItemToCollection(collectionHandle,sim.handle_tree,object1,1)
+sim.addItemToCollection(collectionHandle,sim.handle_single,object6,0)</code>
+
+<p>See also the <a href="apiFunctions.htm#collections">API functions related to collections</a>.</p>
+
+<br>
+<br>
+ </tr>
+</table> 
+</div>  
+  
+  
+</body>
+
+</html>

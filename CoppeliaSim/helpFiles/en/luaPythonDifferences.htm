@@ -1,0 +1,129 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Strict//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<title>Threaded and non-threaded script code</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+</head>
+
+<body>
+
+<div align="center">
+<table class=allEncompassingTable >
+ <tr>
+  <td >
+<p><a href="../index.html" TARGET="_top"><img src="images/homeImg.png"></a></p>
+
+
+<h1>Lua vs Python scripts</h1>
+
+<p>The way Lua and Python scripts are handled in CoppeliaSim (next to differences related to the language itself) displays small differences, which are discussed here:</p>
+
+<li>Python scripts require a <em>#python</em> header tag as the very first instruction/comment:</li>
+<code class="hljs language-python coppelia-coppeliasim-script">#python
+
+def sysCall_init():
+    print("Hello world!")
+</code>
+<li>Lua code always executes in the same thread as CoppeliaSim and is thus quite fast. Python code on the other hand is launched in a new process, which connects to CoppeliaSim via socket communication. This implies that Python code will usually start and run slower than Lua code.</li>
+<li>Python scripts are handled via Lua wrapper code, which handles the launch and communication of each Python script. Auxiliary Lua code can be passed via the <em>luaExec</em> command, within a Python comment section. That code must come immediately after the <em>#python</em> header tag:</li>
+<code class="hljs language-python coppelia-coppeliasim-script">#python
+#luaExec wrapper='myWrapperCode' -- looks for myWrapperCode.lua in Lua's search path
+#luaExec additionalPaths={'c:/path1','c:/path2'} -- adds additional Python module search paths
+#luaExec additionalIncludePaths={'c:/Python38','c:/path2'} -- adds additional paths to search for the include file
+'''luaExec
+function myLuaFunction()
+    -- do something here
+end
+'''
+
+def sysCall_init():
+    print("Hello world!")
+</code>
+<li>The import directive does not work when importing the primary Python file, and following should be used instead:</li>
+<code class="hljs language-python coppelia-coppeliasim-script">#python
+include myExternalFile
+
+# myExternalFile is the pythonScript name or path (absolute or relative), without quotes nor the ending '.py'
+# searched paths include:
+# &lt;CoppeliaSim executable path&gt;/ 
+# &lt;CoppeliaSim executable path&gt;/python 
+# &lt;current scene path&gt;/ 
+# &lt;additional path&gt;/ (see system/usrset.txt and value 'additionalPythonPath')
+# additional include paths passed via #luaExec additionalIncludePaths={'c:/Python38'}
+</code>
+<li>Threaded Lua code, since implemented via coroutines, will always block while executing (i.e. CoppeliaSim won't handle any other task during that time). This is most of the time not noticeable, except when calling blocking functions that are foreign to CoppeliaSim. Threaded Python code on the other hand, will never block when executing, also with functions that are foreign to CoppeliaSim.</li>
+<li>Python threaded scripts do not have an initialization nor clean-up callback. They should thus handle initialization and clean-up within their <em>sysCall_thread</em> function:</li>
+<code class="hljs language-python coppelia-coppeliasim-script">#python
+
+def sysCall_thread():
+    sim.setThreadAutomaticSwitch(True)
+    # Do some initialization here, e.g.:
+    h = sim.getObject('/myCube')
+    originalColor = sim.getObjectColor(h,0,sim.colorcomponent_ambient_diffuse)
+    sim.setObjectColor(h,0,sim.colorcomponent_ambient_diffuse,[1,0,0])
+    
+    # Handle the main loop here, e.g.:
+    while sim.getThreadExistRequest() == False:
+        print(sim.getObjectPosition(h,-1))
+        
+    # Do some clean-up here:
+    sim.setObjectColor(h,0,sim.colorcomponent_ambient_diffuse,originalColor)
+</code>
+<li>Python threaded scripts should explicitly enable thread automatic switching, otherwise CoppeliaSim will block (or wait until <a href="regularApi/simSwitchThread.htm">sim.switchThread</a> is called):</li>
+<code class="hljs language-python coppelia-coppeliasim-script">#python
+
+def sysCall_thread():
+    sim.setThreadAutomaticSwitch(True)
+    while sim.getThreadExistRequest() == False:
+        pass
+</code>
+<li>Python threaded scripts will need to call a message pump (via <a href="regularApi/simHandleExtCalls.htm">sim.handleExtCalls</a>) in order to have user callback functions to be serviced:</li>
+<code class="hljs language-python coppelia-coppeliasim-script">#python
+
+def sysCall_thread():
+    sim.setThreadAutomaticSwitch(True)
+    xml ='&lt;ui title="Custom UI"&gt; &lt;button text="Click me!" on-click="click_callback"/&gt; &lt;/ui&gt;'
+    ui=simUI.create(xml)
+    while sim.getThreadExistRequest() == False:
+        sim.handleExtCalls()
+    simUI.destroy(ui)
+
+def click_callback(ui,button):
+    print("button was clicked!")
+</code>
+
+
+
+<li>Lua callback functions are always reentrant, while Python callback functions are usually non-reentrant. A workaround to this is to have Lua assist Python like in following example, where Python would call a Lua function:</li>
+<code class="hljs language-python coppelia-coppeliasim-script">#python
+'''luaExec
+function myLuaFunction()
+    print("Hello")
+end
+'''
+
+def sysCall_init():
+    object=sim.getScriptInt32Param(sim.handle_self,sim.scriptintparam_objecthandle)
+    path=sim.getObjectAlias(object,1)
+    sim.callScriptFunction('myLuaFunction@'+path,sim.scripttype_childscript)
+</code>
+
+<li>Some rare API functions will only be availabe in Lua, while other only in Python.</li>
+
+<li>The word <em>table</em> in the documentation refers to array-like or map-like items in Lua, while in Python, it refers to either <em>lists</em> or <em>dicts</em>.</li>
+
+<li>Finally remember that Python lists have a zero-based numbering, while Lua array-like tables have a 1-based numbering.</li>
+
+
+  <br>
+  <br>
+      </tr>
+</table> 
+</div>  
+  
+  
+</body>
+
+</html>

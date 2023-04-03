@@ -1,0 +1,55 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Strict//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<title>Remote API</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+</head>
+
+<body>
+
+<div align="center">
+<table class=allEncompassingTable >
+ <tr>
+  <td >
+<p><a href="../index.html" TARGET="_top"><img src="images/homeImg.png"></a></p>
+
+
+
+<h1>Remote API</h1>
+
+<p>The remote API is one of <a href="meansOfCommunication.htm">several ways an application can connect with CoppeliaSim</a>. It allows communication between CoppeliaSim and an external application (i.e. an application running in a different process, or on a different machine), is cross-platform, and supports the exact same API function calls as from within a CoppeliaSim script. It comes in two distinct versions/frameworks:</p>
+
+<li><a href="zmqRemoteApiOverview.htm">The ZeroMQ remote API</a>: with support of Python,  C++, Matlab, Octave, Java and Lua clients.</li>
+<li><a href="wsRemoteApiOverview.htm">The WebSocket remote API</a>: with support of JavaScript clients.</li>
+
+<p>As an example, a Python ZeroMQ remote API client receiving and applying back a <a href="visionSensors.htm">vision sensor</a> image could look like:</p>
+
+<code class="hljs language-python coppelia-zmq-remote-api-client">from time import sleep
+from zmqRemoteApi import RemoteAPIClient
+client = RemoteAPIClient('localhost',23000)
+sim = client.getobject('sim')
+sensor1Handle=sim.getObject('/VisionSensor')
+sensor2Handle=sim.getObject('/PassiveVisionSensor')
+
+sim.startSimulation()
+while True:
+    image,resolution=sim.getVisionSensorImg(sensor1Handle)
+    sim.setVisionSensorImg(sensor2Handle,image)
+    sleep(0.01)
+sim.stopSimulation()</code>
+<br>
+<p>(for backward compatibility, see <a href="legacyRemoteApiOverview.htm">here</a> for the deprecated legacy remote API)</p>
+
+
+<br>
+<br>
+ </tr>
+</table> 
+</div>  
+  
+  
+</body>
+
+</html>

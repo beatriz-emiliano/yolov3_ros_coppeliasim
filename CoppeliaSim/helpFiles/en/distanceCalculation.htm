@@ -1,0 +1,79 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Strict//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<title>Distance calculation</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+</head>
+
+<body>
+
+<div align="center">
+<table class=allEncompassingTable >
+ <tr>
+  <td >
+<p><a href="../index.html" TARGET="_top"><img src="images/homeImg.png"></a></p>
+
+
+
+<h1>Distance calculation</h1>
+
+
+<p>CoppeliaSim can measure the minimum distance between two <a href="measurableObjects.htm">measurable</a> <a href="entities.htm">entities</a> in a flexible way. The calculation is an exact minimum distance calculation.<br>
+  <br>
+  <br>
+</p>
+
+<p align=center><img src="images/distanceCalculation1.jpg"></p>
+<p class=imageLabel>[Minimum distance calculation between two manipulators]</p>
+<br>
+<p>Using the API function <a href="regularApi/simCheckDistance.htm">sim.checkDistance</a>, one can easily calculate the minimum distance between entities, for instance between a robot and its environment, from within a <a href="childScripts.htm">child script</a>, in each simulation step:</p>
+
+<code class="hljs language-lua coppelia-coppeliasim-script">
+function sysCall_init()
+    local robotBase=sim.getObject('/robotModelAlias')
+    robotCollection=sim.createCollection(0)
+    sim.addItemToCollection(robotCollection,sim.handle_tree,robotBase,0)
+end
+
+function sysCall_sensing()
+    local result,distData,objectPair=sim.checkDistance(robotCollection,sim.handle_all)
+    if result>0 then
+        local txt='Robot clearance is '..distData[7]
+        txt=txt..'m, minimum distance object pair is '..getAsString(objectPair)
+        print(txt)
+    end
+end</code>
+
+<p>One can also display the measured minimum distance, as a colored segment in the scene:</p>
+
+<code class="hljs language-lua coppelia-coppeliasim-script">
+function sysCall_init()
+    local robotBase=sim.getObject('/robotModelAlias')
+    robotCollection=sim.createCollection(0)
+    sim.addItemToCollection(robotCollection,sim.handle_tree,robotBase,0)
+    distanceSegment=sim.addDrawingObject(sim.drawing_lines,4,0,-1,1,{0,1,0})
+end
+
+function sysCall_sensing()
+    local result,distData,objectPair=sim.checkDistance(robotCollection,sim.handle_all)
+    if result>0 then
+        sim.addDrawingObjectItem(distanceSegment,nil)
+        sim.addDrawingObjectItem(distanceSegment,distData)
+    end
+end</code>
+
+
+<p>CoppeliaSim's distance calculation functionality is also available as stand-alone routines via the <a href="coppeliaGeometricRoutines.htm">Coppelia geometric routines</a>.</p>
+
+<br>
+<br>
+ </tr>
+</table> 
+</div>  
+  
+  
+</body>
+
+</html>

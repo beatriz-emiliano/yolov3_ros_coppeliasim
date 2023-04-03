@@ -1,0 +1,177 @@
+<?xml version="1.0"?>
+<xsd:schema
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    elementFormDefault="unqualified">
+
+    <xsd:simpleType name="identifier">
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="[a-zA-Z_][a-zA-Z0-9_]*" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="sizeconstraints">
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="(\d+\.\.)?(\*|\d+)(,(\d+\.\.)?(\*|\d+))*" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:complexType name="commandRef">
+        <xsd:attribute name="name" type="identifier" use="required" />
+    </xsd:complexType>
+
+    <xsd:complexType name="enumRef">
+        <xsd:attribute name="name" type="identifier" use="required" />
+    </xsd:complexType>
+
+    <xsd:complexType name="structRef">
+        <xsd:attribute name="name" type="identifier" use="required" />
+    </xsd:complexType>
+
+    <xsd:complexType name="scriptFunctionRef">
+        <xsd:attribute name="name" type="identifier" use="required" />
+    </xsd:complexType>
+
+    <xsd:complexType name="formattedText" mixed="true">
+        <xsd:sequence>
+            <xsd:choice minOccurs="0" maxOccurs="unbounded">
+                <xsd:element name="command-ref" type="commandRef" />
+                <xsd:element name="enum-ref" type="enumRef" />
+                <xsd:element name="struct-ref" type="structRef" />
+                <xsd:element name="script-function-ref" type="scriptFunctionRef" />
+                <xsd:element name="code" />
+                <xsd:element name="sub" />
+                <xsd:element name="sup" />
+                <xsd:element name="em" />
+                <xsd:element name="strong" />
+                <xsd:element name="ul" />
+                <xsd:element name="ol" />
+                <xsd:element name="li" />
+                <xsd:element name="br" />
+                <xsd:element name="a" />
+            </xsd:choice>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="paramSpec">
+        <xsd:all>
+            <xsd:element name="description" type="formattedText" minOccurs="0" />
+        </xsd:all>
+        <xsd:attribute name="name" type="identifier" use="required" />
+        <xsd:attribute name="type" type="identifier" use="required" />
+        <xsd:attribute name="item-type" type="identifier" />
+        <xsd:attribute name="size" type="sizeconstraints" />
+        <xsd:attribute name="default" type="xsd:string" />
+        <xsd:attribute name="nullable" type="xsd:boolean" />
+    </xsd:complexType>
+
+    <xsd:complexType name="funcParamSpec">
+        <xsd:complexContent>
+            <xsd:extension base="paramSpec">
+                <xsd:attribute name="skip" type="xsd:boolean" />
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="funcParamsSpec">
+        <xsd:sequence>
+            <xsd:element name="param" type="funcParamSpec" minOccurs="0" maxOccurs="unbounded" />
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="categoriesSpec">
+        <xsd:sequence>
+            <xsd:element name="category" minOccurs="0" maxOccurs="unbounded">
+                <xsd:complexType>
+                    <xsd:attribute name="name" type="xsd:string" use="required" />
+                    <xsd:attribute name="indirect" type="xsd:boolean" />
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="seeAlsoSpec">
+        <xsd:sequence>
+            <xsd:choice minOccurs="0" maxOccurs="unbounded">
+                <xsd:element name="command-ref" type="commandRef" />
+                <xsd:element name="enum-ref" type="enumRef" />
+                <xsd:element name="struct-ref" type="structRef" />
+                <xsd:element name="script-function-ref" type="scriptFunctionRef" />
+            </xsd:choice>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="pluginSpec">
+        <xsd:sequence>
+            <xsd:element name="description" type="formattedText" minOccurs="0" />
+            <xsd:choice minOccurs="0" maxOccurs="unbounded">
+                <xsd:element name="command">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="description" type="formattedText" minOccurs="0" />
+                            <xsd:element name="categories" type="categoriesSpec" minOccurs="0" />
+                            <xsd:element name="see-also" type="seeAlsoSpec" minOccurs="0" />
+                            <xsd:element name="params" type="funcParamsSpec" minOccurs="0" />
+                            <xsd:element name="return" type="funcParamsSpec" minOccurs="0" />
+                        </xsd:sequence>
+                        <xsd:attribute name="name" type="identifier" use="required" />
+                        <xsd:attribute name="c-name" type="identifier" />
+                        <xsd:attribute name="c-in-name" type="identifier" />
+                        <xsd:attribute name="c-out-name" type="identifier" />
+                    </xsd:complexType>
+                </xsd:element>
+                <xsd:element name="enum">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="description" type="formattedText" minOccurs="0" />
+                            <xsd:element name="categories" type="categoriesSpec" minOccurs="0" />
+                            <xsd:element name="see-also" type="seeAlsoSpec" minOccurs="0" />
+                            <xsd:element name="item" maxOccurs="unbounded">
+                                <xsd:complexType>
+                                    <xsd:sequence>
+                                        <xsd:element name="description" type="formattedText" minOccurs="0" />
+                                    </xsd:sequence>
+                                    <xsd:attribute name="name" type="identifier" use="required" />
+                                    <xsd:attribute name="value" type="xsd:string" />
+                                </xsd:complexType>
+                            </xsd:element>
+                        </xsd:sequence>
+                        <xsd:attribute name="name" type="identifier" use="required" />
+                        <xsd:attribute name="item-prefix" type="xsd:string" />
+                        <xsd:attribute name="base" type="xsd:integer" />
+                    </xsd:complexType>
+                </xsd:element>
+                <xsd:element name="struct">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="description" type="formattedText" minOccurs="0" />
+                            <xsd:element name="categories" type="categoriesSpec" minOccurs="0" />
+                            <xsd:element name="see-also" type="seeAlsoSpec" minOccurs="0" />
+                            <xsd:element name="param" type="paramSpec" maxOccurs="unbounded" />
+                        </xsd:sequence>
+                        <xsd:attribute name="name" type="identifier" use="required" />
+                    </xsd:complexType>
+                </xsd:element>
+                <xsd:element name="script-function">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="description" type="formattedText" minOccurs="0"/>
+                            <xsd:element name="categories" type="categoriesSpec" minOccurs="0" />
+                            <xsd:element name="see-also" type="seeAlsoSpec" minOccurs="0" />
+                            <xsd:element name="params" type="funcParamsSpec" minOccurs="0" />
+                            <xsd:element name="return" type="funcParamsSpec" minOccurs="0" />
+                        </xsd:sequence>
+                        <xsd:attribute name="name" type="identifier" use="required" />
+                        <xsd:attribute name="c-name" type="identifier" />
+                        <xsd:attribute name="c-in-name" type="identifier" />
+                        <xsd:attribute name="c-out-name" type="identifier" />
+                    </xsd:complexType>
+                </xsd:element>
+            </xsd:choice>
+        </xsd:sequence>
+        <xsd:attribute name="name" type="identifier" use="required" />
+        <xsd:attribute name="author" type="xsd:string" />
+        <xsd:attribute name="version" type="xsd:integer" />
+    </xsd:complexType>
+
+    <xsd:element name="plugin" type="pluginSpec" />
+</xsd:schema>

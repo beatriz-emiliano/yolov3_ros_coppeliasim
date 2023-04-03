@@ -1,0 +1,70 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Strict//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<title>Graph properties</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+</head>
+
+<body>
+
+<div align="center">
+<table class=allEncompassingTable >
+ <tr>
+  <td >
+<p><a href="../index.html" TARGET="_top"><img src="images/homeImg.png"></a></p>
+
+
+
+<h1>Graph dialog</h1>
+
+<p>The graph dialog is part of the <a href="sceneObjectPropertiesDialog.htm">scene object properties dialog</a>, which is located at [Menu bar --&gt; Tools --&gt; Scene object properties]. You can also open the dialog with a double-click on an object icon in the <a href="userInterface.htm#SceneHierarchy">scene hierarchy</a>, or with a click on its <a href="userInterface.htm#toolbars">toolbar</a> button:<br>
+</p>
+
+<p align=center><img src="images/objectPropertyToolbarButton.jpg"></p>
+<p class=imageLabel>[Scene object properties toolbar button]</p>
+<br>
+
+<p>In the scene object properties dialog, click  the <strong>Graph</strong> button to display the graph dialog (the <strong>Graph</strong> button only appears if the last selection is a <a href="graphs.htm">graph</a>). The dialog displays the settings and parameters of the last selected graph:<br>
+</p>
+
+
+<p align=center><img src="images/graphDialog1.jpg"></p>
+<p class=imageLabel>[Graph dialog]</p>
+<br>
+
+<li><strong>Object size</strong>: size of the graph object. This parameter has no functional effect.<br>
+</li>
+
+
+<li><strong>Buffer is cyclic</strong>: when selected and the number of elements in each data stream reached the buffer size, then the first elements will be erased in order to be able to record new elements. Otherwise recording stops when the buffer is full.<br>
+</li>
+
+
+<li><strong>Buffer size</strong>: number of elements each data streams can record.<br>
+</li>
+
+<li><strong>Remove all streams/curves</strong>: clears all data streams and curves.</li>
+
+<li><strong>Remove all static streams/curves</strong>: clears all static data streams and curves. A static data stream or curve is a &quot;frozen&quot; data stream or curve, that can't be modified anymore.</li>
+
+<li><strong>Adjust background color</strong>: allows adjusting the background color in the time graph or x/y graph view.<br>
+</li>
+
+<li><strong>Adjust grid color</strong>: allows adjusting the grid and graduation color in the time graph or x/y graph view.
+</li>
+
+<p>The graph object itself is mainly operated via a <a href="customizationScripts.htm">customization script</a>, that could be adapted in various ways, if needed. The behaviour of the graph can also be altered in various ways by clicking the <a href="userConfigCallbackFunctions.htm">user parameter</a> icon next to the customization script.</p>
+
+<br>
+<br>
+
+ </tr>
+</table> 
+</div>  
+  
+  
+</body>
+
+</html>

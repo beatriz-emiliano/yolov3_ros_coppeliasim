@@ -1,0 +1,56 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Strict//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<title>Joint dynamics properties</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+</head>
+
+<body>
+
+<div align="center">
+<table class=allEncompassingTable >
+ <tr>
+  <td >
+<p><a href="../index.html" TARGET="_top"><img src="images/homeImg.png"></a></p>
+
+
+
+<h1>Joint dynamics properties</h1>
+
+<p>The joint dynamics properties are part of the <a href="jointProperties.htm">joint properties</a>. Its dialog displays the dynamics settings and parameters of the last selected <a href="joints.htm">joint</a>. If no joint is selected, or the joint is not dynamic, then the dialog is inactive. If more than one joint is selected, then some parameters can be copied from the last selected joint to the other selected joints:<br>
+</p>
+<p align=center><img src="images/jointDynamicsProperties1.jpg"></p>
+<p class=imageLabel>[Joint dynamics dialog]</p>
+<br>
+
+
+
+
+
+<p>Several control modes are supported:</p>
+
+<li><strong>Free</strong> <strong>(no control)</strong>: the joint is free, i.e. non-motorized</li>
+
+<li><strong>Force/torque control</strong>: the joint is controlled in force/torque, i.e. a constant force/torque is applied. Can be modulated with <a href="regularApi/simSetJointTargetForce.htm">sim.setJointTargetForce</a></li>
+
+<li><strong>Velocity control</strong>: the joint is controlled in velocity: the specified force/torque is applied until the desired velocity is reached. Optionally, a specific motion profile for the velocity can be applied. Can be modulated with <a href="regularApi/simSetJointTargetVelocity.htm">sim.setJointTargetVelocity</a> and <a href="regularApi/simSetJointTargetForce.htm">sim.setJointTargetForce</a></li>
+
+<li><strong>Position control</strong>: the joint is controlled in position: the specified force/torque is applied and the velocity is modulated via a PID controller, or via specific motion constraints, until the target position/angle is reached. Parameters can be adjusted with <a href="regularApi/simSetJointTargetPosition.htm">sim.setJointTargetPosition</a>, <a href="regularApi/simSetJointTargetForce.htm">sim.setJointTargetForce</a> and <a href="regularApi/simSetObjectFloatParam.htm">sim.setObjectFloatParam</a></li>
+
+<li><strong>Spring-damper control</strong>: the joint is controlled in position by modulating the exerted force/torque via a simple KC controller, trying to reach the zero displacement position/angle. Parameters can be adjusted with <a href="regularApi/simSetJointTargetPosition.htm">sim.setJointTargetPosition</a>, <a href="regularApi/simSetJointTargetForce.htm">sim.setJointTargetForce</a> and <a href="regularApi/simSetObjectFloatParam.htm">sim.setObjectFloatParam</a></li>
+
+
+<li><strong>Custom control</strong>: the joint calls a <a href="jointCallbackFunctions.htm">joint callback function</a> for control, where the user can decide of a force/torque and target velocity in a flexible way</li>
+<br>
+<br>
+
+ </tr>
+</table> 
+</div>  
+  
+  
+</body>
+
+</html>

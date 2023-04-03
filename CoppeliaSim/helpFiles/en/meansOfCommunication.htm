@@ -1,0 +1,330 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Strict//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<title>messaging/interfaces/connectivity</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+</head>
+
+<body>
+
+<div align="center">
+<table class=allEncompassingTable >
+ <tr>
+  <td >
+<p><a href="../index.html" TARGET="_top"><img src="images/homeImg.png"></a></p>
+
+
+
+<h1>Messaging/interfaces/connectivity</h1>
+
+<p>There are several ways messages or data can be exchanged/transmitted/received in and around CoppeliaSim.</p>
+<p> One can exchange data within CoppeliaSim, via:</p>
+<li><a href="#signals">signals</a></li>
+<li><a href="#customDataBlocks">custom data blocks</a></li>
+<li><a href="#pluginFunctions">calling plugin functions</a></li>
+<li><a href="#simCallScriptFunction">calling script functions</a></li>
+<li><a href="#simBroadcastMsg">broadcasting a message</a></li>
+
+<p><a name="external"></a>Data can also be exchanged with an external application, other computer, machine, etc., via:</p>
+<li><a href="#simCallScriptFunction">calling script functions</a></li>
+<li><a href="#simBroadcastMsg">broadcasting a message</a></li>
+<li><a href="remoteApiOverview.htm">Remote API</a></li>
+<li><a href="rosInterfaces.htm">ROS</a></li>
+<li><a href="#zmq">ZeroMQ</a></li>
+<li><a href="#ws">WebSocket</a></li>
+<li><a href="#serialPort">serial port</a></li>
+<li><a href="#sockets">sockets</a></li>
+<li><a href="#other">other</a></li>
+
+<br>
+<br>
+
+<h2><a name="signals"></a>Signals</h2>
+
+
+<p><a href="apiFunctions.htm#signals">Signals</a> can be seen as global variables. They can be defined, redefined, read and cleared. For example:</p>
+
+<code class="hljs language-lua coppelia-coppeliasim-script">
+-- script 1 writes the data to string signal <em>mySignalName</em>:
+
+local myData={1,2,{&quot;Hello&quot;,&quot;world&quot;,true,{value1=63,value2=&quot;aString&quot;}}}
+sim.setStringSignal(&quot;mySignalName&quot;,sim.packTable(myData))</code>
+
+<code class="hljs language-lua coppelia-coppeliasim-script">
+-- script 2 reads the data from string signal <em>mySignalName</em>:
+
+local myData=sim.getStringSignal(&quot;mySignalName&quot;)
+if myData then
+    myData=sim.unpackTable(myData)
+end</code>
+
+<br>
+
+<h2><a name="customDataBlocks"></a>Custom data blocks</h2>
+
+
+<p><a href="apiFunctions.htm#customDataBlocks">Custom data blocks</a> is data that is stored inside of a <a href="objects.htm">scene object</a>, or inside a <a href="scenes.htm">scene</a>. It can be used to store custom data to be saved together with a <a href="models.htm">model</a> or scene, but also as a means of communication. For example:</p>
+
+<code class="hljs language-lua coppelia-coppeliasim-script">
+-- script 1 writes the data to the scene:
+
+local myData={1,2,{&quot;Hello&quot;,&quot;world&quot;,true,{value1=63,value2=&quot;aString&quot;}}}
+sim.writeCustomDataBlock(sim.handle_scene,&quot;myTag&quot;,sim.packTable(myData))</code>
+
+<code class="hljs language-lua coppelia-coppeliasim-script">
+-- script 2 reads the data from the scene:
+
+local myData=sim.readCustomDataBlock(sim.handle_scene,&quot;myTag&quot;)
+if myData then
+    myData=sim.unpackTable(myData)
+end</code>
+
+
+<br>
+
+
+
+<h2>
+<a name="callingPluginFunctions"></a><a name="pluginFunctions"></a>Calling plugin functions
+</h2>
+
+
+<p><a href="scripts.htm">Scripts</a> can call specific <a href="plugins.htm">plugin</a> functions, so-called callback functions: in order to be able to do this, the plugin must  first register its callback functions via <a href="apiFunctions.htm#customScriptFunctions">simRegisterScriptFunction</a>. This is a convenient mechanism to extend CoppeliaSim's functionality, but can also be used for complex data exchange between scripts and plugins. Following illustrates a very simple plugin function and its registration:</p>
+
+<code class="hljs language-c++ coppelia-coppeliasim-plugin">void myCallbackFunc(SScriptCallBack* p)
+{
+    int stack=p-&gt;stackID;
+    CStackArray inArguments;
+    inArguments.buildFromStack(stack);
+    
+    if ( (inArguments.getSize()>0)&amp;&amp;inArguments.isString(0) )
+    {
+        std::string tmp(&quot;we received a string: &quot;);
+        tmp+=inArguments.getString(0);
+        simAddLog(&quot;ABC&quot;,sim_verbosity_msgs,tmp.c_str());
+        
+        CStackArray outArguments;
+        outArguments.pushString(&quot;Hello to you too!&quot;);
+        outArguments.buildOntoStack(stack);
+    }
+    else
+        simSetLastError(&quot;simABC.func&quot;,&quot;Not enough arguments or wrong arguments.&quot;);
+}
+
+// Somewhere in the plugin's initialization code:
+simRegisterScriptCallbackFunction(&quot;simABC.func@ABC&quot;,&quot;string reply=simABC.func(string inputStr)&quot;,myCallbackFunc);</code>
+
+
+
+<br>
+
+
+<h2><a name="simCallScriptFunction"></a><a name="simCallScriptFunctionEx"></a>Calling script functions
+</h2>
+
+
+<p>A <a href="scripts.htm">script</a> function can obviously be called from within the same script, but also:</p>
+<li>across scripts (via <a href="regularApi/simCallScriptFunction.htm">sim.callScriptFunction</a>)</li>
+<li>from a plugin (via <a href="regularApi/simCallScriptFunctionEx.htm">simCallScriptFunctionEx</a>)</li>
+<li>from a <a href="#ros">ROS</a> client (via a callback mechanism)
+<li>or from a <a href="remoteApiOverview.htm">remote API</a> client</li>
+<p>The called script function can perform various tasks, then send back data to the caller. This is also a simple way to extend the functionality of an external application in a quick manner. It is however important that the called script doesn't perform lengthly tasks, otherwise everything will come to a halt (lengthly tasks should rather be triggered externally, and processed at an appropriate moment by the script itself when called from the regular <a href="file:///D:/coppeliaRobotics/helpFiles/en/callbackFunctions.htm">system callbacks</a>).</p>
+
+
+
+
+<br>
+
+
+<h2><a name="simBroadcastMsg"></a>Broadcasting messages
+</h2>
+
+
+<p>A <a href="scripts.htm">script</a> or a <a href="remoteApiOverview.htm">remote API</a> client can broadcast a message to all scripts at once, via the <a href="regularApi/simBroadcastMsg.htm">sim.broadcastMsg</a> function. For instance, following will constantly broadcast a message to all scripts, including to itself:</p>
+<code class="hljs language-lua coppelia-coppeliasim-script">
+function sysCall_init()
+    scriptHandle=sim.getScriptInt32Param(sim.handle_self,sim.scriptintparam_handle)
+end
+
+function sysCall_sensing()
+    local message={id='greetingMessage',data={msg='Hello!'}}
+    sim.broadcastMsg(message)
+end
+
+function sysCall_msg(msg,origin)
+    if origin~=scriptHandle and msg.id=='greetingMessage' then
+        print(string.format("Received following message from script %i:",origin))
+        print(msg.data.msg)
+    end
+end</code>
+<br>
+
+
+
+
+<h2><a name="zmq"></a>ZMQ
+</h2>
+
+
+<p>The <a href="http://api.zeromq.org/" target="_blank">ZeroMQ library</a>, wrapped inside the <a href="https://github.com/CoppeliaRobotics/simExtZMQ" target="_blank">ZMQ plugin</a>, offers several <a href="simZMQ.htm">API functions related to ZeroMQ messaging</a>. Following illustrates a simple requester:</p>
+
+<code class="hljs language-lua coppelia-coppeliasim-script">
+function sysCall_init()
+    corout=coroutine.create(coroutineMain)
+end
+
+function sysCall_actuation()
+    if coroutine.status(corout)~='dead' then
+        local ok,errorMsg=coroutine.resume(corout)
+        if errorMsg then
+            error(debug.traceback(corout,errorMsg),2)
+        end
+    end
+end
+
+function coroutineMain()
+    printf('Connecting to hello world server...')
+    context=simZMQ.ctx_new()
+    requester=simZMQ.socket(context,simZMQ.REQ)
+    simZMQ.connect(requester,'tcp://localhost:5555')
+
+    for request_nbr=0,10 do
+        print('-----------------------------------------')
+        local data='Hello'
+        printf('[requester] Sending &quot;%s&quot;...',data)
+        simZMQ.send(requester,data,0)
+        local rc,data=simZMQ.recv(requester,0)
+        printf('[requester] Received &quot;%s&quot;',data)
+    end
+end
+
+function sysCall_cleanup()
+    simZMQ.close(requester)
+    simZMQ.ctx_term(context)
+end</code>
+
+<p>And following would be the corresponding responder:</p>
+
+<code class="hljs language-lua coppelia-coppeliasim-script">
+function sysCall_init()
+    corout=coroutine.create(coroutineMain)
+end
+
+function sysCall_actuation()
+    if coroutine.status(corout)~='dead' then
+        local ok,errorMsg=coroutine.resume(corout)
+        if errorMsg then
+            error(debug.traceback(corout,errorMsg),2)
+        end
+    end
+end
+
+function coroutineMain()
+    context=simZMQ.ctx_new()
+    responder=simZMQ.socket(context,simZMQ.REP)
+    local rc=simZMQ.bind(responder,'tcp://*:5555')
+    if rc~=0 then error('failed bind') end
+    
+    while true do
+        local rc,data=simZMQ.recv(responder,0)
+        printf('[responder] Received &quot;%s&quot;',data)
+        data='World'
+        printf('[responder] Sending &quot;%s&quot;...',data)
+        simZMQ.send(responder,data,0)
+    end
+end
+
+function sysCall_cleanup()
+    simZMQ.close(responder)
+    simZMQ.ctx_term(context)
+end</code>
+<br>
+
+<h2><a name="ws"></a>WebSocket
+</h2>
+<p>The <a href="https://github.com/CoppeliaRobotics/simExtWS" target="_blank">WebSocket plugin</a>, offers several <a href="simWS.htm">API functions allowing to interact with a web browser</a>. Following is a simple echo server:</p>
+
+<code class="hljs language-lua coppelia-coppeliasim-script">
+function onMessage(server,connection,data)
+    simWS.send(server,connection,data)
+end
+
+function sysCall_init()
+    server=simWS.start(9000)
+    simWS.setMessageHandler(server,'onMessage')
+end</code>
+
+<p>And following is a simple broadcaster:</p>
+
+<code class="hljs language-lua coppelia-coppeliasim-script">
+function onOpen(server,connection)
+    clients[server]=clients[server] or {}
+    clients[server][connection]=1
+end
+
+function onClose(server,connection)
+    clients[server][connection]=nil
+end
+
+function broadcast(server,data)
+    for connection,_ in pairs(clients[server] or {}) do
+        simWS.send(server,connection,data)
+    end
+end
+
+function sysCall_init()
+    clients={}
+    server=simWS.start(9000)
+    simWS.setOpenHandler(server,'onOpen')
+    simWS.setCloseHandler(server,'onClose')
+end</code>
+
+
+<br>
+
+<h2>
+<a name="serialPort"></a>Serial port</a>
+</h2>
+
+
+<p>CoppeliaSim implements several <a href="apiFunctions.htm#serialPort">serial port API functions</a> for Lua. With Python, use the <a href="https://pypi.org/project/pyserial/">Python serial port extension</a>.</p>
+<br>
+
+<h2>
+<a name="sockets"></a>Sockets
+</h2>
+
+
+<p>CoppeliaSim ships with the <a href="http://w3.impa.br/~diego/software/luasocket/home.html" target="_blank">LuaSocket</a> extension library for Lua. Following illustrates how to fetch a webpage:</p>
+
+<code class="hljs language-lua coppelia-coppeliasim-script">
+http=require('socket.http')
+page=http.request('http://www.google.com')</code>
+
+<p>With Python, use the socket module:</p>
+<code class="hljs language-python coppelia-coppeliasim-script">
+import socket</code>
+<br>
+
+
+<h2>
+<a name="other"></a>Other
+</h2>
+
+
+<p>Many other means of communication can be directly supported from within a script, via a Lua extension library or via a Python extension. Indirectly, by passing via a <a href="plugins.htm">plugin</a>, there are even more possibilities, since a plugin can virtually link to any type of c/c++ communication library.</p>
+
+
+
+<br>
+<br>
+ </tr>
+</table> 
+</div>  
+  
+  
+</body>
+
+</html>

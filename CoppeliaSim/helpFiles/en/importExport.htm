@@ -1,0 +1,165 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Strict//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<title>Import/export</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+</head>
+
+<body>
+
+<div align="center">
+<table class=allEncompassingTable >
+ <tr>
+  <td >
+<p><a href="../index.html" TARGET="_top"><img src="images/homeImg.png"></a></p>
+
+
+
+<h1>Import/export</h1>
+
+<p>Several type of data and formats can be imported to, or exported from CoppeliaSim:</p>
+<li><a href="#mesh">mesh data, via various formats</a></li>
+<li><a href="xmlFormat.htm">scene/model data, via CoppeliaSim's XML format</a></li>
+<li><a href="urdfPlugin.htm">scene/model data, via the URDF format</a></li>
+<li><a href="sdfPlugin.htm">scene/model data, via the SDF format</a></li>
+<li><a href="#gltf">animation or scene data, via the GLTF format</a></li>
+<li><a href="aviRecorder.htm">video data, via various formats</a></li>
+<li><a href="#image">image data, via various formats</a></li>
+<li><a href="#text">text/binary data</a></li>
+<li><a href="#misc">miscellaneous data</a></li>
+
+<p>New importers/exports can easily be created via an <a href="addOns.htm">add-on</a>, or via a <a href="plugins.htm">plugin</a>.</p>
+
+<br>
+<br>
+
+
+<h2>
+<a name="mesh"></a>Importing/exporting mesh data
+</h2>
+
+
+
+
+<p>The mesh import/export functionality is handled via the <a href="https://github.com/CoppeliaRobotics/simExtAssimp" target="_blank">Assimp plugin for CoppeliaSim</a>. More formats can be supported if the Assimp library (and Assimp plugin) are recompiled with the required flags. The plugin's functionality is exposed to CoppeliaSim's GUI and can be reached at [Menu bar --&gt; File --&gt; Import --&gt; Meshes...] or [Menu bar --&gt; File --&gt; Export --&gt; Selected shapes...].</p>
+<p>If after the import operation you can't see any shapes in the <a href="scenes.htm">scene</a>, but the <a href="userInterface.htm#SceneHierarchy">scene hierarchy</a> indicates the presence of newly added shapes, then most probably your shapes are either too big or too small to be seen. You can then proceed to a scaling operation. Additionally, you can subdivide imported meshes via [Menu Bar --&gt; Edit --&gt; Grouping/Merging --&gt; Divide selected shapes]. </p>
+<p>Make sure that imported meshes do not contain too many triangles (for a robot, typically between 10'000-20'000 triangles in total), otherwise CoppeliaSim could be slowed down. You can decimate an imported mesh via [Menu bar --&gt; Edit --&gt; Decimate selected shape...]</p>
+<p>Heightfields in CoppeliaSim are also meshes, and can be imported via [Menu bar --&gt; File --&gt; Import --&gt; Heightfield...]. Supported formats are image formats (the color or grey tone components represent elevations), or csv or txt formats (comma-separated values (y rows with x values)).</p>
+<p>See also the <a href="simAssimp.htm?view=alphabetical">API functions related to mesh import/export</a>.</p>
+<br>
+
+
+
+
+<h2>
+<a name="gltf"></a>Exporting a simulation as GLTF
+</h2>
+
+
+<p>A scene or simulation can be exported via the GLTF format. The result will be a still scene or an animated scene. The functionality is available via two distinct <a href="addOns.htm">add-ons</a>: <em>GLTFExporter</em> and <em>GLTFAnimationExporter</em>, available via [Menu bar --&gt; Add-ons].</p>
+<p>See also the <a href="simGLTF.htm?view=alphabetical">API functions related to GLTF export</a>.</p>
+
+<br>
+
+<h2>
+<a name="image"></a>Importing/exporting images
+</h2>
+
+
+<p>Images can be imported/exported with <a href="regularApi/simLoadImage.htm">sim.loadImage</a> and <a href="regularApi/simSaveImage.htm">sim.saveImage</a>. </p>
+<p>See also <a href="regularApi/simGetScaledImage.htm">sim.getScaledImage</a>, <a href="regularApi/simTransformImage.htm">sim.transformImage</a>, <a href="regularApi/simTransformBuffer.htm">sim.transformBuffer</a> and the <a href="simIM.htm?view=alphabetical">OpenCV plugin API reference</a>.</p>
+
+<br>
+
+<h2>
+<a name="text"></a>Importing/exporting text/binary data
+</h2>
+
+<p>Following example illustrates how to log a joint angle to a file, as text data:</p>
+  
+<code class="hljs language-lua coppelia-coppeliasim-script">
+function sysCall_init()
+    jointHandle=sim.getObject('/Joint')
+    file=io.open('jointAngles.txt','w+')
+    file:write('Joint angles for each simulation step:\n\n')
+end
+
+function sysCall_sensing()
+    local v=180*sim.getJointPosition(jointHandle)/math.pi
+    file:write(string.format('time: %.3f [s]',sim.getSimulationTime()+sim.getSimulationTimeStep()))
+    file:write(string.format(', joint angle: %.1f [deg]\n',v))
+end
+
+function sysCall_cleanup()
+    file:close()
+end</code>
+
+<p>Following example illustrates how to read a file, line by line:</p>
+  
+<code class="hljs language-lua coppelia-coppeliasim-script">
+for line in io.lines('textFile.txt') do 
+    print(line)
+end</code>
+
+
+
+<br>
+<br>
+
+<h2>
+<a name="misc"></a>Importing miscellaneous data
+</h2>
+
+<p>The <em>Floor Plan Importer</em> add-on can create shapes from a floor plan image, by mapping each pixel value to either a <em>wall</em>, a <em>door</em> or a <em>window</em>.</p>
+
+<p>A floor-plan image looks like this:</p>
+
+<p align=center><img src="images/floorPlanZoom.png"></p>
+<p class=imageLabel>[Example of a floor-plan image]</p>
+<br>
+
+<p>Note that above image is zoomed in, and actual lines are 1px thick.</p>
+
+<p>Different gray levels are used to indicate different classes. In this example, 0 is used for walls, 82 for window holes, and 187 for door holes. These values can be configured (see below) and anything outside the given ranges will be ignored, so it is possible to use a floor plan that contains more annotations, but only extract wall/door/window lines if given in a specific gray value.</p>
+
+<p>Various other formats derived from or related to images can also be imported. For a complete list of supported formats, use <a href="simUI.htm#supportedImageFormats">simUI.supportedImageFormats</a>. Following example illustrates the PGM format:</p>
+
+<pre class=lightWhiteBox>P2
+18 6
+3
+0 0 0 0 0 0 0 0 0 0 0 0 2 2 2 2 0 0
+0 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 0
+0 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 0
+0 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 0
+0 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 0
+0 0 1 1 1 1 0 0 0 0 0 0 2 2 2 2 0 0</pre>
+
+<p>The add-on is available via [Menu bar --&gt; Modules]. After selecting the menu entry, an image file must be selected, then a few import options can be specified:</p>
+
+<ul>
+    <li><em>pixel size</em>: the scaling of the image. One pixel in the image will correspond to this length in the real world.</li>
+    <li>For every class (walls, windows, doors):
+        <ul>
+            <li><em>height</em>: the height of the wall/hole in the real world.</li>
+            <li><em>range</em>: the range of the intensity (grayscale value) in the image.</li>
+        </ul>
+    </li>
+    <li><em>color</em>: the color of the walls shape.</li>
+    <li><em>respondable</em>: wether the walls shape will be respondable.</li>
+    <li><em>optimize</em>: if checked, the lines will be dissected to a minimal number of rectangles, so the shape will contain a low count of pure (cuboid) shapes.</li>
+    <li><em>invert image values</em>: if checked, the image values will be inverted before processing.</li>
+</ul>
+
+<br>
+<br>
+
+ </tr>
+</table> 
+</div>  
+  
+  
+</body>
+
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Strict//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<title>Trigger callback functions</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+</head>
+
+<body>
+
+<div align="center">
+<table class=allEncompassingTable >
+ <tr>
+  <td >
+<p><a href="../index.html" TARGET="_top"><img src="images/homeImg.png"></a></p>
+
+
+
+<h1>Trigger callback functions</h1>
+
+<p><a href="childScripts.htm">Child script</a>s, or <a href="customizationScripts.htm">customization scripts</a> can include a trigger callback function (which is one of many <a href="callbackFunctions.htm#systemCallbacks">system callback functions</a>), when associated with a <a href="visionSensors.htm">vision sensor</a> or a <a href="proximitySensors.htm">proximity sensor</a>. </p>
+<p>Some conditions apply as to the location of the trigger callback function: if a trigger callback function is present in a child script as well as in a customization script, both attached to the object triggering, then the child script will be called first, and the customization script second.</p>
+
+<p>A vision sensor can generate the trigger signal inside of the <a href="visionCallbackFunctions.htm">vision callback function</a>. The trigger callback (if present) is then called as in following example:<br>
+</p>
+
+<code class="hljs language-lua coppelia-coppeliasim-script">
+function <strong>sysCall_trigger</strong>(inData)
+    -- We have:
+    -- inData.handle : the handle of the vision sensor.
+    -- inData.packedPackets : an array of data packets, packed (use sim.unpackFloatTable to unpack)
+    --    the first data packet always contains 15 auxiliary values about the acquired image:
+    --    - minimum of {intensity, red, green blue and depth value}
+    --    - maximum of {intensity, red, green blue and depth value}
+    --    - average of {intensity, red, green blue and depth value}
+
+    local outData={}
+    outData.trigger=true
+    return outData
+end
+</code>
+
+<br>
+
+<p>A proximity sensor generates the trigger signal when an object is detected. The trigger callback (if present) is then called as in following example:</p>
+<code class="hljs language-lua coppelia-coppeliasim-script">
+function <strong>sysCall_trigger</strong>(inData)
+    -- We have:
+    -- inData.handle : the handle of the proximity sensor.
+    -- inData.detectedObjectHandle : handle of detected object
+    -- inData.detectedPoint : detected point, relative to sensor frame
+    -- inData.normalVector : normal vector at detected point, relative to sensor frame
+
+    local outData={}
+    outData.trigger=true
+    return outData
+end
+</code>
+<br>
+
+<p>In Python, a trigger callback function can only be implemented via a non-threaded script, and it should be explicitly activated with a luaExec command:</p>
+<code class="hljs language-python coppelia-coppeliasim-script">
+#python
+#luaExec additionalFuncs={'sysCall_trigger'}
+
+def <strong>sysCall_trigger</strong>(inData):
+    pass</code>
+
+
+
+<br>
+<br>
+ </tr>
+ <tr>
+   <td > 
+ </tr>
+</table> 
+</div>  
+  
+  
+</body>
+
+</html>

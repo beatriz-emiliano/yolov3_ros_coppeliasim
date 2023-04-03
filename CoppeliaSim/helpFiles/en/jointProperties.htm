@@ -1,0 +1,81 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Strict//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<title>Joint properties</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+</head>
+
+<body>
+
+<div align="center">
+<table class=allEncompassingTable >
+ <tr>
+  <td >
+<p><a href="../index.html" TARGET="_top"><img src="images/homeImg.png"></a></p>
+
+
+
+<h1>Joint properties</h1>
+
+<p>The joint properties are part of the <a href="sceneObjectPropertiesDialog.htm">scene object properties </a>dialog, which is located at [Menu bar --&gt; Tools --&gt; Scene object properties]. You can also open the dialog with a double-click on an object icon in the <a href="userInterface.htm#SceneHierarchy">scene hierarchy</a>, or with a click on its <a href="userInterface.htm#toolbars">toolbar</a> button:<br>
+</p>
+
+<p align=center><img src="images/objectPropertyToolbarButton.jpg"></p>
+<p class=imageLabel>[Scene object properties toolbar button]</p>
+<br>
+
+<p>In the scene object properties dialog, click  the <strong>Joint</strong> button to display the joint dialog (the <strong>Joint</strong> button only appears if the last selection is a <a href="joints.htm">joint</a>). The dialog displays the settings and parameters of the last selected joint. If more than one joint is selected, then some parameters can be copied from the last selected joint to the other selected joints (<strong>Apply to selection</strong>-buttons. Be aware that this however only has an effect between joints of same type or mode):<br>
+</p>
+
+
+<p align=center><img src="images/jointDialog1.jpg"></p>
+<p class=imageLabel>[Joint dialog]</p>
+<br>
+
+
+<li><strong>Position is cyclic</strong>: indicates whether the angular joint position is cyclic (varies between -180 and +180 degrees without limitation). Only revolute joints can be cyclic<br>
+</li>
+
+<li><strong>Screw pitch</strong>: the pitch value of the joint. This property becomes available only with the Revolute/Screw-type of joint, when the <strong>Position is cyclic</strong>-checkbox is left unchecked<br>
+</li>
+
+<li><strong>Position minimum</strong>: the minimum allowed value of a non-cyclic revolute joint, a screw, or a prismatic joint<br>
+</li>
+
+<li><strong>Position range</strong>: the variation range of a non-cyclic revolute joint, a screw or a prismatic joint. A position of such a joint is limited between <strong>Position minimum</strong> and <strong>Position minimum</strong>+<strong>Position range</strong></li>
+
+<li><strong>Position</strong>: linear/angular joint position<br>
+</li>
+
+<li><strong>Mode</strong>: a joint can be in kinematic, dependent, or dynamic mode</li>
+
+<li><strong>Adjust dependency equation</strong>: if the joint is in dependent mode, then a linear equation can be specified that links the joint to another one. The values in this section of the dialog are all indicated in meters or radians</li>
+
+
+
+
+
+<li><strong>Length</strong>: length of the joint. Has no functional meaning
+</li>
+
+<li><strong>Diameter</strong>: diameter of the joint. Has no functional meaning
+</li>
+
+<li><strong>Adjust color</strong>: allows adjusting the color of the joint</li>
+
+<li><strong>Show dynamic properties dialog</strong>: toggles the <a href="jointDynamicsProperties.htm">joint dynamics properties</a> dialog. The joint dynamics dialog allows to adjust a joint's dynamic properties</li>
+
+
+<br>
+<br>
+
+ </tr>
+</table> 
+</div>  
+  
+  
+</body>
+
+</html>

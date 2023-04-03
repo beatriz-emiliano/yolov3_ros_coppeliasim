@@ -1,0 +1,3 @@
+module CoppeliaSimPlugin
+PluginWindow 1.0 PluginWindow.qml
+Import 1.0 Import.qml

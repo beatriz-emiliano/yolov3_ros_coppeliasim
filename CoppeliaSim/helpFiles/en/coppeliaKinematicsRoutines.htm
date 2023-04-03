@@ -1,0 +1,104 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Strict//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<title>Coppelia kinematics routines</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+</head>
+
+<body>
+
+<div align="center">
+<table class=allEncompassingTable >
+ <tr>
+  <td >
+<p><a href="../index.html" TARGET="_top"><img src="images/homeImg.png"></a></p>
+
+
+
+<h1>Coppelia Kinematics Routines</h1>
+
+<p>The <a href="https://github.com/CoppeliaRobotics/coppeliaKinematicsRoutines" target="_blank">Coppelia Kinematics Routines</a> is a collection of C++ functions that allow to solve forward/inverse kinematics tasks for any type of mechanism (redundant/non-redundant, containing nested loops, etc.). Those functions give CoppeliaSim its kinematics calculation capability.</p>
+
+<p>You can embedd and use the Coppelia Kinematics Routines in your stand-alone application, which then can programmatically set up complex kinematics tasks. Refer also to the <a href="coppeliaKinematicsRoutines-api.htm?view=category">Coppelia Kinematics Routines C++ API documentation</a>.</p>
+
+<p>The Coppelia Kinematics Routines source code is not directly part of CoppeliaSim, and carries separate licensing conditions. Refer to the source code for details, and <a href="http://coppeliarobotics.com/contact">contact us</a>.</p>
+
+
+
+
+<p>Following is a simple example how to set up an inverse kinematics task, and perform calculations from within an external application:</p>
+
+<code class="hljs language-c++ coppelia-external-code">
+#include &quot;ik.h&quot;
+
+int main(int argc, char* argv[])
+{
+    // Create the IK environment:
+    ikCreateEnvironment();
+
+    // Create a simple 3 DoF kinematic chain:
+    int tipHandle,targetHandle;
+    int joint1Handle,joint2Handle,joint3Handle;
+    ikCreateJoint(nullptr,ik_jointtype_revolute,&amp;joint1Handle);
+    ikCreateJoint(nullptr,ik_jointtype_revolute,&amp;joint2Handle);
+    C7Vector tr(C4Vector(1.57,0.0,0.0),C3Vector::zeroVector);
+    ikSetObjectTransformation(joint2Handle,-1,&amp;tr);
+    ikSetObjectParent(joint2Handle,joint1Handle,true);
+    ikCreateJoint(nullptr,ik_jointtype_revolute,&amp;joint3Handle);
+    tr.X=C3Vector(0.0,0.0,0.2);
+    ikSetObjectTransformation(joint3Handle,-1,&amp;tr);
+    ikSetObjectParent(joint3Handle,joint2Handle,true);
+    ikCreateDummy(nullptr,&amp;tipHandle);
+    tr.Q.clear();
+    tr.X=C3Vector(0.0,0.0,0.4);
+    ikSetObjectTransformation(tipHandle,-1,&amp;tr);
+    ikSetObjectParent(tipHandle,joint3Handle,true);
+    ikCreateDummy(nullptr,&amp;targetHandle);
+    ikSetObjectTransformation(targetHandle,-1,&amp;tr);
+    ikSetLinkedDummy(tipHandle,targetHandle);
+    // we now have: joint1 --&gt; joint2 --&gt; joint3 --&gt; tipDummy &lt;...&gt; targetDummy
+
+    // Create an IK group that constrains the chain tip to follow (in position)
+    // the target dummy:
+    int ikGroup;
+    ikCreateIkGroup(nullptr,&amp;ikGroup);
+    int ikElementIndex;
+    ikAddIkElement(ikGroup,tipHandle,&amp;ikElementIndex);
+    ikSetIkElementConstraints(ikGroup,ikElementIndex,ik_constraint_position);
+
+    ikGetObjectTransformation(targetHandle,-1,&amp;tr);
+    while (true)
+    {
+        // Slightly move the target dummy:
+        tr.X=tr.X+C3Vector(0.001,0.002,-0.0001);
+        ikSetObjectTransformation(targetHandle,-1,&amp;tr)
+
+        // Solve IK:
+        int result;
+        ikHandleIkGroup(ikGroup,&amp;result);
+        if (result==ik_result_fail)
+            break;
+
+        // Read joint values:
+        simReal joint1Angle,joint2Angle,joint3Angle;
+        ikGetJointPosition(joint1Handle,&amp;joint1Angle);
+        ikGetJointPosition(joint2Handle,&amp;joint2Angle);
+        ikGetJointPosition(joint3Handle,&amp;joint3Angle);
+    }
+    return(0);
+}</code>
+
+
+
+<br>
+<br>
+ </tr>
+</table> 
+</div>  
+  
+  
+</body>
+
+</html>

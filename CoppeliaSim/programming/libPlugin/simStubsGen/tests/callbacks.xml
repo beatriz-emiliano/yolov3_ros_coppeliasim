@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<?xml-stylesheet type="text/xsl" href="callbacks.xsl"?>
+
+<plugin name="StubsGenTests" author="federico.ferri.it@gmail.com">
+    <description>Test suite for simStubsGen</description>
+
+    <command name="basic">
+        <params>
+            <param name="i" type="int" />
+            <param name="f" type="float" />
+            <param name="d" type="double" />
+            <param name="s" type="string" />
+            <param name="b" type="bool" />
+            <param name="ti" type="table" item-type="int" size="1..2" />
+            <param name="z" type="struct1" />
+        </params>
+        <return>
+            <param name="i" type="int" />
+            <param name="f" type="float" />
+            <param name="d" type="double" />
+            <param name="s" type="string" />
+            <param name="b" type="bool" />
+            <param name="ti" type="table" item-type="int" />
+            <param name="z" type="struct1" />
+        </return>
+    </command>
+
+    <command name="nullable">
+        <params>
+            <param name="i" type="int" nullable="true" />
+            <param name="f" type="float" nullable="true" />
+            <param name="d" type="double" nullable="true" />
+            <param name="s" type="string" nullable="true" />
+            <param name="b" type="bool" nullable="true" />
+            <param name="ti" type="table" item-type="int" size="1..2" nullable="true" />
+            <param name="z" type="struct1" nullable="true" />
+        </params>
+        <return>
+            <param name="i" type="int" nullable="true" />
+            <param name="f" type="float" nullable="true" />
+            <param name="d" type="double" nullable="true" />
+            <param name="s" type="string" nullable="true" />
+            <param name="b" type="bool" nullable="true" />
+            <param name="ti" type="table" item-type="int" nullable="true" />
+            <param name="z" type="struct1" nullable="true" />
+        </return>
+    </command>
+
+    <command name="test_struct2">
+        <params>
+            <param name="a" type="struct2" />
+        </params>
+        <return>
+            <param name="i" type="int" />
+            <param name="in" type="int" nullable="true" />
+            <param name="id" type="int" />
+            <param name="idn" type="int" nullable="true" />
+        </return>
+    </command>
+
+    <command name="struct_table">
+        <params>
+            <param name="i" type="int" />
+            <param name="s" type="string" />
+            <param name="tz" type="table" item-type="struct1" size="1..2" />
+        </params>
+        <return>
+            <param name="i" type="int" nullable="true" />
+            <param name="f" type="float" nullable="true" />
+            <param name="d" type="double" nullable="true" />
+            <param name="s" type="string" nullable="true" />
+            <param name="b" type="bool" nullable="true" />
+        </return>
+    </command>
+
+    <command name="struct_default">
+        <params>
+            <param name="z" type="struct2" default="{10,20,30,40}" />
+        </params>
+        <return>
+            <param name="z" type="struct2" />
+        </return>
+    </command>
+
+    <command name="test_grid">
+        <params>
+            <param name="a" type="grid" item-type="float" />
+        </params>
+        <return>
+            <param name="a" type="grid" item-type="float" />
+        </return>
+    </command>
+
+    <command name="test_grid2">
+        <params>
+            <param name="mtx" type="grid" size="*,*" item-type="float" />
+            <param name="mtx3x3" type="grid" size="3,3" item-type="float" />
+            <param name="t4x2xN" type="grid" size="4,2,*" item-type="float" />
+            <param name="mtx2" type="grid" size="2..*,2..*" item-type="float" />
+        </params>
+    </command>
+
+    <enum name="enum1" item-prefix="e1_" base="40">
+        <item name="a" />
+        <item name="b" />
+        <item name="the_answer" />
+    </enum>
+
+    <struct name="struct1">
+        <param name="i" type="int" />
+        <param name="f" type="float" />
+        <param name="d" type="double" />
+        <param name="s" type="string" />
+        <param name="b" type="bool" />
+    </struct>
+
+    <struct name="struct2">
+        <param name="i" type="int" />
+        <param name="in" type="int" nullable="true" />
+        <param name="id" type="int" default="42" />
+        <param name="idn" type="int" default="43" nullable="true" />
+    </struct>
+</plugin>

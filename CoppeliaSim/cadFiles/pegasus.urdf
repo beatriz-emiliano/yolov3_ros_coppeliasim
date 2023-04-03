@@ -1,0 +1,214 @@
+<?xml version="1.0"?>
+<robot name="Base__63__">
+    <link name="Base__63__">
+        <inertial>
+            <origin xyz="0.000000 0.000000 0.000000" rpy="-3.141593 3.141593 -3.141593" />
+            <inertia izz="0.66666674613953" iyy="0.66666674613953" ixz="0.0" iyz="0.0" ixx="0.66666674613953" ixy="0.0" />
+            <mass value="100.0" />
+        </inertial>
+        <collision>
+            <origin xyz="0.000000 0.000000 0.000000" rpy="-3.141593 3.141593 -3.141593" />
+            <geometry>
+                <box size="0.200000 0.200000 0.200000" />
+            </geometry>
+        </collision>
+    </link>
+    <link name="base_link_respondable__65__">
+        <inertial>
+            <origin xyz="0.000000 0.000000 0.000000" rpy="-3.141593 3.141593 -3.141593" />
+            <inertia izz="0.056253369897604" iyy="0.085856325924397" ixz="0.0" iyz="0.0" ixx="0.065106004476547" ixy="0.0" />
+            <mass value="18.0" />
+        </inertial>
+        <collision>
+            <origin xyz="0.000000 0.000000 0.000000" rpy="-3.141593 3.141593 -3.141593" />
+            <geometry>
+                <mesh filename="file:///home/smart/CoppeliaSim/CoppeliaSim_Edu_V4_3_0_rev12_Ubuntu20_04/cadFiles/pegasus_base_link_respondable__65__.dae" />
+            </geometry>
+        </collision>
+        <visual>
+            <origin xyz="0.000000 -0.000000 0.000000" rpy="3.141593 3.141218 3.141593" />
+            <geometry>
+                <mesh filename="file:///home/smart/CoppeliaSim/CoppeliaSim_Edu_V4_3_0_rev12_Ubuntu20_04/cadFiles/pegasus_base_link_visual__66__.dae" />
+            </geometry>
+            <material name="base_link_visual__66___material">
+                <color rgba="0.564710 0.564710 0.564710 1.0" />
+            </material>
+        </visual>
+    </link>
+    <joint type="continuous" name="waist__64__">
+        <axis xyz="0 0 1" />
+        <parent link="Base__63__" />
+        <child link="base_link_respondable__65__" />
+        <origin xyz="0.025000 0.027000 0.186000" rpy="2.980519 1.571142 2.980519" />
+    </joint>
+    <link name="link_2_respondable__68__">
+        <inertial>
+            <origin xyz="0.000000 0.000000 0.000000" rpy="-3.141593 3.141593 -3.141593" />
+            <inertia izz="0.013366375118494" iyy="0.0033039632253349" ixz="0.0" iyz="0.0" ixx="0.015329318121076" ixy="0.0" />
+            <mass value="3.0" />
+        </inertial>
+        <collision>
+            <origin xyz="0.000000 0.000000 0.000000" rpy="-3.141593 3.141593 -3.141593" />
+            <geometry>
+                <mesh filename="file:///home/smart/CoppeliaSim/CoppeliaSim_Edu_V4_3_0_rev12_Ubuntu20_04/cadFiles/pegasus_link_2_respondable__68__.dae" />
+            </geometry>
+        </collision>
+        <visual>
+            <origin xyz="0.000000 -0.000004 -0.000000" rpy="-3.141560 3.141597 -3.141593" />
+            <geometry>
+                <mesh filename="file:///home/smart/CoppeliaSim/CoppeliaSim_Edu_V4_3_0_rev12_Ubuntu20_04/cadFiles/pegasus_link_2_visual__69__.dae" />
+            </geometry>
+            <material name="link_2_visual__69___material">
+                <color rgba="0.898040 0.917650 0.929410 1.0" />
+            </material>
+        </visual>
+    </link>
+    <joint type="continuous" name="shoulder__67__">
+        <axis xyz="0 0 1" />
+        <parent link="base_link_respondable__65__" />
+        <child link="link_2_respondable__68__" />
+        <origin xyz="-0.154366 -0.027912 -0.053951" rpy="-3.140434 4.712044 3.140491" />
+    </joint>
+    <link name="link_3_respondable__71__">
+        <inertial>
+            <origin xyz="0.000000 0.000000 0.000000" rpy="-3.141593 3.141593 -3.141593" />
+            <inertia izz="0.012992775067687" iyy="0.0016677724197507" ixz="0.0" iyz="0.0" ixx="0.013779846951365" ixy="0.0" />
+            <mass value="3.0" />
+        </inertial>
+        <collision>
+            <origin xyz="0.000000 0.000000 0.000000" rpy="-3.141593 3.141593 -3.141593" />
+            <geometry>
+                <mesh filename="file:///home/smart/CoppeliaSim/CoppeliaSim_Edu_V4_3_0_rev12_Ubuntu20_04/cadFiles/pegasus_link_3_respondable__71__.dae" />
+            </geometry>
+        </collision>
+        <visual>
+            <origin xyz="0.000000 0.000000 0.000000" rpy="3.141592 3.144159 3.141593" />
+            <geometry>
+                <mesh filename="file:///home/smart/CoppeliaSim/CoppeliaSim_Edu_V4_3_0_rev12_Ubuntu20_04/cadFiles/pegasus_link_3_visual__72__.dae" />
+            </geometry>
+            <material name="link_3_visual__72___material">
+                <color rgba="0.898040 0.917650 0.929410 1.0" />
+            </material>
+        </visual>
+    </link>
+    <joint type="continuous" name="elbow__70__">
+        <axis xyz="0 0 1" />
+        <parent link="link_2_respondable__68__" />
+        <child link="link_3_respondable__71__" />
+        <origin xyz="-0.114550 0.004808 0.115458" rpy="-0.013980 1.573334 -0.014023" />
+    </joint>
+    <link name="link_4_respondable__74__">
+        <inertial>
+            <origin xyz="0.000000 0.000000 0.000000" rpy="-3.141593 3.141593 -3.141593" />
+            <inertia izz="0.00086425675544888" iyy="0.00077398313442245" ixz="0.0" iyz="0.0" ixx="0.00030839670216665" ixy="0.0" />
+            <mass value="1.0" />
+        </inertial>
+        <collision>
+            <origin xyz="0.000000 0.000000 0.000000" rpy="-3.141593 3.141593 -3.141593" />
+            <geometry>
+                <mesh filename="file:///home/smart/CoppeliaSim/CoppeliaSim_Edu_V4_3_0_rev12_Ubuntu20_04/cadFiles/pegasus_link_4_respondable__74__.dae" />
+            </geometry>
+        </collision>
+        <visual>
+            <origin xyz="0.000000 -0.000000 0.000000" rpy="3.141593 3.141593 -3.141593" />
+            <geometry>
+                <mesh filename="file:///home/smart/CoppeliaSim/CoppeliaSim_Edu_V4_3_0_rev12_Ubuntu20_04/cadFiles/pegasus_link_4_visual__75__.dae" />
+            </geometry>
+            <material name="link_4_visual__75___material">
+                <color rgba="0.898040 0.917650 0.929410 1.0" />
+            </material>
+        </visual>
+    </link>
+    <joint type="continuous" name="slope__73__">
+        <axis xyz="0 0 1" />
+        <parent link="link_3_respondable__71__" />
+        <child link="link_4_respondable__74__" />
+        <origin xyz="0.001191 -0.000910 -0.076646" rpy="0.000019 4.709852 -0.000015" />
+    </joint>
+    <link name="link_5_respondable__77__">
+        <inertial>
+            <origin xyz="0.000000 0.000000 0.000000" rpy="-3.141593 3.141593 -3.141593" />
+            <inertia izz="0.0" iyy="0.00030000001424924" ixz="0.0" iyz="0.0" ixx="0.00030000001424924" ixy="0.0" />
+            <mass value="0.30000001192093" />
+        </inertial>
+        <collision>
+            <origin xyz="0.000000 0.000000 0.000000" rpy="-3.141593 3.141593 -3.141593" />
+            <geometry>
+                <mesh filename="file:///home/smart/CoppeliaSim/CoppeliaSim_Edu_V4_3_0_rev12_Ubuntu20_04/cadFiles/pegasus_link_5_respondable__77__.dae" />
+            </geometry>
+        </collision>
+        <visual>
+            <origin xyz="0.000000 0.000000 0.000000" rpy="-1.570795 3.141591 3.141592" />
+            <geometry>
+                <mesh filename="file:///home/smart/CoppeliaSim/CoppeliaSim_Edu_V4_3_0_rev12_Ubuntu20_04/cadFiles/pegasus_link_5_visual__78__.dae" />
+            </geometry>
+            <material name="link_5_visual__78___material">
+                <color rgba="0.898040 0.917650 0.929410 1.0" />
+            </material>
+        </visual>
+    </link>
+    <joint type="continuous" name="scrolling__76__">
+        <axis xyz="0 0 1" />
+        <parent link="link_4_respondable__74__" />
+        <child link="link_5_respondable__77__" />
+        <origin xyz="-0.120000 -0.002990 -0.001000" rpy="3.141593 3.141593 3.141593" />
+    </joint>
+    <link name="garra_D_responsable__80__">
+        <inertial>
+            <origin xyz="0.000000 0.000000 0.000000" rpy="-3.141593 3.141593 -3.141593" />
+            <inertia izz="0.0" iyy="8.0000005254988e-05" ixz="0.0" iyz="0.0" ixx="8.0000005254988e-05" ixy="0.0" />
+            <mass value="0.079999998211861" />
+        </inertial>
+        <collision>
+            <origin xyz="0.000000 0.000000 0.000000" rpy="-3.141593 3.141593 -3.141593" />
+            <geometry>
+                <mesh filename="file:///home/smart/CoppeliaSim/CoppeliaSim_Edu_V4_3_0_rev12_Ubuntu20_04/cadFiles/pegasus_garra_D_responsable__80__.dae" />
+            </geometry>
+        </collision>
+        <visual>
+            <origin xyz="-0.000004 -0.002566 -0.000157" rpy="-3.141593 3.141593 3.141593" />
+            <geometry>
+                <mesh filename="file:///home/smart/CoppeliaSim/CoppeliaSim_Edu_V4_3_0_rev12_Ubuntu20_04/cadFiles/pegasus_garra_D_visual__81__.dae" />
+            </geometry>
+            <material name="garra_D_visual__81___material">
+                <color rgba="1.000000 1.000000 1.000000 1.0" />
+            </material>
+        </visual>
+    </link>
+    <joint type="prismatic" name="grab_D__79__">
+        <axis xyz="0 0 1" />
+        <limit lower="-0.5" upper="0.5" velocity="1.0" effort="1.0" />
+        <parent link="link_5_respondable__77__" />
+        <child link="garra_D_responsable__80__" />
+        <origin xyz="-0.068275 0.032571 0.000030" rpy="-0.008278 4.683085 -0.052917" />
+    </joint>
+    <link name="garra_E_responsable__83__">
+        <inertial>
+            <origin xyz="0.000000 0.000000 0.000000" rpy="-3.141593 3.141593 -3.141593" />
+            <inertia izz="0.0" iyy="8.0000005254988e-05" ixz="0.0" iyz="0.0" ixx="8.0000005254988e-05" ixy="0.0" />
+            <mass value="0.079999998211861" />
+        </inertial>
+        <collision>
+            <origin xyz="0.000000 0.000000 0.000000" rpy="-3.141593 3.141593 -3.141593" />
+            <geometry>
+                <mesh filename="file:///home/smart/CoppeliaSim/CoppeliaSim_Edu_V4_3_0_rev12_Ubuntu20_04/cadFiles/pegasus_garra_E_responsable__83__.dae" />
+            </geometry>
+        </collision>
+        <visual>
+            <origin xyz="0.000000 0.000000 0.000000" rpy="-3.141593 3.141593 3.141593" />
+            <geometry>
+                <mesh filename="file:///home/smart/CoppeliaSim/CoppeliaSim_Edu_V4_3_0_rev12_Ubuntu20_04/cadFiles/pegasus_garra_E_visual__84__.dae" />
+            </geometry>
+            <material name="garra_E_visual__84___material">
+                <color rgba="1.000000 1.000000 1.000000 1.0" />
+            </material>
+        </visual>
+    </link>
+    <joint type="prismatic" name="grab_E__82__">
+        <axis xyz="0 0 1" />
+        <limit lower="-0.5" upper="0.5" velocity="1.0" effort="1.0" />
+        <parent link="link_5_respondable__77__" />
+        <child link="garra_E_responsable__83__" />
+        <origin xyz="-0.070100 -0.030000 -0.000000" rpy="0.050559 4.683081 -0.052947" />
+    </joint>
+</robot>
