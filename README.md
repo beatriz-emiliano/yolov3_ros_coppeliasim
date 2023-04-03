@@ -1,5 +1,5 @@
 <h1 align="center">
-Utilizando a imagem vinda do CoppeliaSim e tratando com ROS e Python
+Utilizando a imagem vinda do CoppeliaSim por meio de ROS e tratando com Python+YOLOv3
 </h1>
 
 <div align="center">
@@ -8,3 +8,49 @@ Utilizando a imagem vinda do CoppeliaSim e tratando com ROS e Python
 </h3>
 </div>
 
+# Guia
+- [Descrição](#descrição)
+- [Funcionalidades](#funcionalidades)
+
+# Descrição
+
+Este projeto utiliza o simulador CoppeliaSim como ambiente, criando uma cena que simula uma mesa com um notebook e uma banana. Um código em Python é usado para acessar a imagem por meio do ROS (Robot Operating System) e, em seguida, utiliza o YOLOv3 (You Only Look Once version 3) para reconhecer os objetos na imagem que a câmera do CoppeliaSim captura e envia via ROS. O objetivo é mostrar como o reconhecimento de objetos pode ser aplicado em ambientes simulados para aplicações em robótica.
+
+
+<div align="center">
+
+![overview](images/image_7.jpeg)
+
+</div>
+
+# Funcionalidades
+- Captura de imagem do ambiente simulado usando ROS
+- Utilização do YOLOv3 para reconhecimento de objetos na imagem
+- Exibição dos resultados do reconhecimento de objetos na imagem
+
+# Tecnologias utilizadas:
+- Python 3.x
+- CoppeliaSim
+- ROS (Robot Operating System) (ROS Noetic)
+- YOLOv3
+
+# Instalações:
+- Baixe e instale o CoppeliaSim em seu computador
+```
+Use as instruções que contêm no site, eu utilizei a versão EDU
+```
+<div align="center">
+
+[ acesse o site aqui ](https://www.coppeliarobotics.com/downloads)
+
+</div>
+
+- Instale o ROS em seu computador
+```
+Use as instruções que contêm no site, eu utilizei a versão ROS Noétic
+```
+<div align="center">
+
+[ acesse o site aqui ](http://wiki.ros.org/noetic/Installation)
+
+</div>
