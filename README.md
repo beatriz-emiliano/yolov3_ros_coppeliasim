@@ -32,25 +32,37 @@ Este projeto utiliza o simulador CoppeliaSim como ambiente, criando uma cena que
 - Python 3.x
 - CoppeliaSim
 - ROS (Robot Operating System) (ROS Noetic)
+- OpenCV
+- NumPy
 - YOLOv3
 
 # Instalações:
-- Baixe e instale o CoppeliaSim em seu computador
+- CoppeliaSim 
 ```
 Use as instruções que contêm no site, eu utilizei a versão EDU
 ```
 <div align="center">
 
-[ acesse o site aqui ](https://www.coppeliarobotics.com/downloads)
+[ Acesse o site aqui ](https://www.coppeliarobotics.com/downloads)
 
 </div>
 
-- Instale o ROS em seu computador
+- ROS 
 ```
-Use as instruções que contêm no site, eu utilizei a versão ROS Noétic
+Use as instruções que contêm no site, eu utilizei a versão ROS Noetic
 ```
 <div align="center">
 
-[ acesse o site aqui ](http://wiki.ros.org/noetic/Installation)
+[ Acesse o site aqui ](http://wiki.ros.org/noetic/Installation)
 
 </div>
+
+- YOLOv3
+
+Você vai precisar desses arquivos na sua máquina:
+
+```
+  - YoloNames.names
+  - yolov3.cfg
+  - yolov3.weights
+```
