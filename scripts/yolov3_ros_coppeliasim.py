@@ -21,9 +21,8 @@ if mSim.connect(19999) != -1:
     # If the connection is success, initialize the robot properties
     camera = CoppeliaSensor("/sphericalVisionRGBAndDepth/sphericalVisionRGBAndDepth_sensorRGB", 0)
     camera2 = CoppeliaSensor("/sphericalVisionRGBAndDepth/sphericalVisionRGBAndDepth_sensorDepth", 0)
-    # camera = CoppeliaSensor("/kinect/body/rgb", 0)
-    # camera2 = CoppeliaSensor("/kinect/body/depth", 0)
-    #camera = CoppeliaSensor("/cameraTo3dPosition/sensor", 0)
+    # camera = CoppeliaSensor("/kinect/body/rgb", 0) #SCENE - kinect-yolo
+    # camera2 = CoppeliaSensor("/kinect/body/depth", 0) #SCENE - kinect-yolo
     
     time.sleep(1)
     camera2 = CoppeliaSensor("/sphericalVisionRGBAndDepth/sphericalVisionRGBAndDepth_sensorDepth", 0)
@@ -45,13 +44,13 @@ if mSim.connect(19999) != -1:
     img_depth = cv2.flip(img_depth, 0)
 
 
-    with open('/home/smart/realsense_sim/scripts/yoloDados/YoloNames.names') as f:
+    with open('/home/smart/yolov3_ros_coppeliasim/yoloDados/YoloNames.names') as f:
         # cria uma lista com todos os nomes
         labels = [line.strip() for line in f]
 
     # carrega os arquivos treinados pelo framework
-    network = cv2.dnn.readNetFromDarknet('/home/smart/realsense_sim/scripts/yoloDados/yolov3.cfg',
-                                     '/home/smart/realsense_sim/scripts/yoloDados/yolov3.weights')
+    network = cv2.dnn.readNetFromDarknet('/home/smart/yolov3_ros_coppeliasim/yoloDados/yolov3.cfg',
+                                     '/home/smart/yolov3_ros_coppeliasim/yoloDados/yolov3.weights')
 
 
     layers_names_all = network.getLayerNames()
