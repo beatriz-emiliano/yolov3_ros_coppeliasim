@@ -10,7 +10,7 @@ from cv_bridge import CvBridge, CvBridgeError
 import time
 import cv2 
 from csv import DictWriter
-from include.coppeliasim import CoppeliaSim, CoppeliaArmRobot, CoppeliaSensor
+from coppeliasim import CoppeliaSim, CoppeliaArmRobot, CoppeliaSensor
 
 # Initialize the CoppeliaSim connection
 mSim = CoppeliaSim()
